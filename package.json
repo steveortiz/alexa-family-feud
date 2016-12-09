@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "gulp",
+    "clean": "gulp clean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,6 +17,8 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.1",
+    "gulp-rimraf": "^0.2.1",
+    "gulp-shell": "^0.5.2",
     "gulp-zip": "^3.2.0"
   }
 }
