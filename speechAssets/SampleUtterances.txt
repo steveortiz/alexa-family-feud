@@ -5,3 +5,4 @@ HelloWorldIntent say hi
 HelloWorldIntent say hi world
 HelloWorldIntent hi
 HelloWorldIntent how are you
+IntroQuestionIntent {Answer}
