@@ -1,9 +1,8 @@
 var gulp = require("gulp"),
-  babel = require("gulp-babel"),
-  rm = require('gulp-rimraf'),
-  shell = require('gulp-shell'),
-  webpack = require('gulp-webpack'),
-  zip = require('gulp-zip');
+    rm = require('gulp-rimraf'),
+    shell = require('gulp-shell'),
+    webpack = require('gulp-webpack'),
+    zip = require('gulp-zip');
 
 gulp.task('clean', function() {
   gulp.src('dist/*').pipe(rm());
