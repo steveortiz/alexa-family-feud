@@ -5,6 +5,34 @@
     },
     {
       "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    },
+    {
+      "intent": "AMAZON.RepeatIntent"
+    },
+    {
+      "intent": "AMAZON.NoIntent"
+    },
+    {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "IntroQuestionIntent",
+      "slots":
+      [
+        {
+          "name": "Answer1",
+          "type": "LIST_ANSWERS_QUESTION_ONE"
+        }
+      ]
+    },
+    {
+      "intent": "DontKnowIntent"
     }
   ]
 }
