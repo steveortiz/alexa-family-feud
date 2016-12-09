@@ -6,7 +6,7 @@ Assuming you already have an AWS account and an Alexa developer account.
 
 If you don't already have node installed:
 
-```
+```sh
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
 source ~/.bashrc # or start a new terminal session
 command -v nvm # to verify nvm was setup
@@ -20,9 +20,16 @@ Create the following:
 
 Install [aws-cli](http://docs.aws.amazon.com/cli/latest/userguide/installing.html)
 
-Configure a profile called `ff` with credentials to update the lambda function.
+Configure credentials to update the lambda function.  You can use the following command
+to change profiles if desired:
+
+```sh
+export AWS_DEFAULT_PROFILE=profile
+```
 
 ## Developing
+
+Run `npm install` as part of setup and any time dependencies are added.
 
 To build and upload the skill, run `npm start`
 
