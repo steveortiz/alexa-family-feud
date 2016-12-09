@@ -1,21 +1,28 @@
 var gulp = require("gulp"),
   babel = require("gulp-babel"),
-  zip = require('gulp-zip'),
+  rm = require('gulp-rimraf'),
   shell = require('gulp-shell'),
-  rm = require('gulp-rimraf');
-
-gulp.task('build', function() {
-  return gulp.src('./src/*.js')
-    .pipe(zip('skill.zip'))
-    .pipe(gulp.dest('./dist/'));
-});
-
-gulp.task('upload', ['build'], shell.task([
-  'aws lambda update-function-code --zip-file fileb://dist/skill.zip --function-name FamilyFeud --profile ff'
-]));
+  webpack = require('gulp-webpack'),
+  zip = require('gulp-zip');
 
 gulp.task('clean', function() {
   gulp.src('dist/*').pipe(rm());
 });
+
+gulp.task('build', ['clean'], function() {
+  return gulp.src('./src/index.js')
+    .pipe(webpack(require('./webpack.config.js')))
+    .pipe(gulp.dest('./dist/')); // produces dist/index.js
+});
+
+gulp.task('zip', ['build'], function() {
+  return gulp.src('./dist/index.js')
+    .pipe(zip('skill.zip'))
+    .pipe(gulp.dest('./dist/')); // produces skill.zip
+});
+
+gulp.task('upload', ['zip'], shell.task([
+  'aws lambda update-function-code --zip-file fileb://dist/skill.zip --function-name FamilyFeud'
+]));
 
 gulp.task('default', ['upload']);
