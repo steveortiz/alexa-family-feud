@@ -1,0 +1,21 @@
+{
+  "name": "alexa-family-feud",
+  "version": "1.0.0",
+  "description": "Family Feud Skill for Alexa",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "gulp",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steveortiz/alexa-family-feud.git"
+  },
+  "homepage": "https://github.com/steveortiz/alexa-family-feud#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-zip": "^3.2.0"
+  }
+}
