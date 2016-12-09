@@ -17,77 +17,20 @@
  *  User: "Alexa, tell Hello World to say hello"
  *  Alexa: "Hello World!"
  */
-
-/**
- * App ID for the skill
- */
-var APP_ID = undefined; //replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]";
-
-/**
- * The AlexaSkill prototype and helper functions
- */
-var AlexaSkill = require('./AlexaSkill');
-
-/**
- * HelloWorld is a child of AlexaSkill.
- * To read more about inheritance in JavaScript, see the link below.
- *
- * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Introduction_to_Object-Oriented_JavaScript#Inheritance
- */
-var HelloWorld = function () {
-    AlexaSkill.call(this, APP_ID);
-};
+'use strict';
 
 var rounds = [
   {
     question: "Name a word that most people yell at their dogs",
     answers: [
-      "No",
-      "Sit",
-      "Stop",
-      "Down",
-      "Fetch",
-      "Bad"
+      "sit",
+      "stop",
+      "down",
+      "fetch",
+      "bad"
     ]
   }
-]
-// Extend AlexaSkill
-HelloWorld.prototype = Object.create(AlexaSkill.prototype);
-HelloWorld.prototype.constructor = HelloWorld;
-
-HelloWorld.prototype.eventHandlers.onSessionStarted = function (sessionStartedRequest, session) {
-    console.log("HelloWorld onSessionStarted requestId: " + sessionStartedRequest.requestId
-        + ", sessionId: " + session.sessionId);
-    // any initialization logic goes here
-};
-
-HelloWorld.prototype.eventHandlers.onLaunch = function (launchRequest, session, response) {
-    console.log("HelloWorld onLaunch requestId: " + launchRequest.requestId + ", sessionId: " + session.sessionId);
-    var speechOutput = "Welcome to the Alexa Skills Kit, you can say hello";
-    var repromptText = "You can say hello";
-    response.ask(speechOutput, repromptText);
-};
-
-HelloWorld.prototype.eventHandlers.onSessionEnded = function (sessionEndedRequest, session) {
-    console.log("HelloWorld onSessionEnded requestId: " + sessionEndedRequest.requestId
-        + ", sessionId: " + session.sessionId);
-    // any cleanup logic goes here
-};
-
-HelloWorld.prototype.intentHandlers = {
-    // register custom intent handlers
-    "HelloWorldIntent": function (intent, session, response) {
-        response.tellWithCard("Hello World!", "Hello World", "Hello World!");
-    },
-    "IntroQuestionIntent": function(intent, session, request){
-
-    }
-    "AMAZON.HelpIntent": function (intent, session, response) {
-        response.ask("You can say hello to me!", "You can say hello to me!");
-    }
-
-};
-
+];
 // Create the handler that responds to the Alexa Request.
 exports.handler = function (event, context) {
   try {
@@ -124,8 +67,8 @@ exports.handler = function (event, context) {
  * Called when the session starts.
  */
 function onSessionStarted(sessionStartedRequest, session) {
-    console.log("onSessionStarted requestId=" + sessionStartedRequest.requestId
-        + ", sessionId=" + session.sessionId);
+    console.log("onSessionStarted requestId= " + sessionStartedRequest.requestId
+        + ", sessionId= " + session.sessionId);
 
     // add any session init logic here
 }
@@ -160,13 +103,14 @@ function onIntent(intentRequest, session, callback){
    }
 
   if ("IntroQuestionIntent" === intentName) {
+    console.log("IntroQuestionIntent is intentName: "+ intentName);
     handleAnswerRequest(intent, session, callback);
-  } else if("AMAZON.RepeatIntent" === intentName) {
-    handleRepeatQuestionIntent(intent, session, callback);
+  }else if("AMAZON.RepeatIntent" === intentName) {
+    handleRepeatQuestionRequest(intent, session, callback);
   } else if ("AMAZON.StopIntent" === intentName) {
     handleFinishSessionRequest(intent,session,callback);
   } else if ("AMAZON.HelpIntent" === intentName) {
-    handleGetHelpRequest(intent, session, callback);
+    // handleGetHelpRequest(intent, session, callback);
   } else if ("AMAZON.CancelIntent" === intentName) {
     handleFinishSessionRequest(intent, session, callback);
   } else if ("DontKnowIntent" === intentName) {
@@ -179,12 +123,14 @@ function onIntent(intentRequest, session, callback){
 var CARD_TITLE = "ROUND_ONE";
 
 function handleAnswerRequest(intent, session, callback){
+  console.log("Session = " + JSON.stringify(session));
   var speechOutput = "";
   var sessionAttributes = {};
-  var gameInProgress = session.attributes && session.attributes.questions;
+  var gameInProgress = session.attributes && session.attributes.roundQuestion;
   var answerSlotValid = isAnswerSlotValid(intent, 0);
   var userGaveUp = intent.name === "DontKnowIntent";
   if (!gameInProgress) {
+
      // If the user responded with an answer but there is no game in progress, ask the user
      // if they want to start a new game. Set a flag to track that we've prompted the user.
      sessionAttributes.userPromptedToContinue = true;
@@ -198,23 +144,53 @@ function handleAnswerRequest(intent, session, callback){
      var speechOutput = "That answer was incorrect. Goodbye";
      callback(session.attributes,
          buildSpeechletResponse(CARD_TITLE, speechOutput, reprompt, true));
+  } else if (answerSlotValid) {
+      console.log("in answerSlotValid if conditional");
+      return endGameSuccess(callback);
   } else {
-     var gameQuestions = session.attributes.questions,
+     var speechOutput = "Yay you win. Goodbye. ",
+     repromptText = "Thank you for playing.";
+     sessionAttributes = {
+       "speechOutput": "Yay you win. Goodbye",
+       "repromptText": "Thanks for playing."
+     };
 
-         callback(sessionAttributes,
-             buildSpeechletResponse(CARD_TITLE, speechOutput, repromptText, false));
+     callback(sessionAttributes,
+         buildSpeechletResponse(CARD_TITLE, speechOutput, repromptText, true));
   }
 }
 
-
-function getWelcomeResponse(callback){
+function endGameSuccess(callback){
   var sessionAttributes = {},
-  speechOutput = "Welcome to Family Feud. Lets begin with the first round.",
-  shouldEndSession = false,
+  speechOutput = "Yay you win. Goodbye",
+  shouldEndSession = true,
   roundQuestion = getWelcomeRoundQuestion(),
   correctAnswers = rounds[0].answers,
   repromptText = getWelcomeRoundQuestion();
 
+  sessionAttributes = {
+    "speechOutput": speechOutput,
+    "repromptText": repromptText,
+    "roundQuestion": roundQuestion,
+    "correctAnswers": correctAnswers,
+    "score": 0
+  };
+  console.log("callback = " + callback);
+  callback(sessionAttributes,
+    buildSpeechletResponse(CARD_TITLE, speechOutput, repromptText, shouldEndSession));
+}
+
+/**
+ *
+ */
+function getWelcomeResponse(callback){
+  var sessionAttributes = {},
+  speechOutput = "Welcome to Family Feud. Lets begin with the first round. ",
+  shouldEndSession = false,
+  roundQuestion = getWelcomeRoundQuestion(),
+  correctAnswers = rounds[0].answers,
+  repromptText = getWelcomeRoundQuestion();
+  speechOutput += repromptText;
   sessionAttributes = {
     "speechOutput": speechOutput,
     "repromptText": repromptText,
@@ -252,8 +228,12 @@ function handleRepeatRequest(intent, session, callback) {
 }
 
 function isAnswerSlotValid(intent, currentRound){
-  for(var i = 0; i < rounds[currentRound].answers.length; i++) {
-    if (intent === rounds[currentRound].answers[i]){
+  var answers=rounds[currentRound].answers;
+  var intentRequest = intent.slots.Answer.value;
+  console.log("intentRequest: " + JSON.stringify(intentRequest));
+  console.log("Answers: " + JSON.stringify(answers));
+  for(var i = 0; i < answers.length; i++) {
+    if (intentRequest === answers[i]){
       return true;
     }
   }
