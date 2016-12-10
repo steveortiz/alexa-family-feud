@@ -1,7 +1,7 @@
 var gulp = require("gulp"),
     rm = require('gulp-rimraf'),
     shell = require('gulp-shell'),
-    webpack = require('gulp-webpack'),
+    webpack = require('webpack-stream'),
     zip = require('gulp-zip');
 
 gulp.task('clean', function() {
