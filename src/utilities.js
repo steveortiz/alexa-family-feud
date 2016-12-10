@@ -1,7 +1,3 @@
-/**
- * Created by ericjohnson on 2/21/16.
- */
-
 export function validateApplicationId(event, context) {
   let myAppId = "amzn1.ask.skill.c59eb5dd-8149-42d2-a0d0-8f4c509dfe81",
     isMyApp = event.session.application.applicationId === myAppId;
