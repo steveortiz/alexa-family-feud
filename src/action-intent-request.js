@@ -7,9 +7,7 @@ import {
   getRoundQuestions
 } from './question-storage';
 
-
-// let model = './response-model',
-  let utilities = require('./utilities'),
+let utilities = require('./utilities'),
     ActionLaunchRequest = require('./action-launch-request'),
     client = require('./api-client');
 
