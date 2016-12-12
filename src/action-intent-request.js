@@ -20,7 +20,7 @@ export function intent(event, context) {
   console.log('Intent Requested');
 
   // get intent info
-  let intent = event.request.intent,
+  const intent = event.request.intent,
     intentName = intent.name,
     responseModel = new model.ResponseModel("FACE-OFF");
 
