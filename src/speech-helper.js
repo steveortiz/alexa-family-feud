@@ -2,7 +2,7 @@ import {
   getRoundQuestions,
   getWelcomeRoundQuestion,
   CARD_TITLE
-} from './questionStorage';
+} from './question-storage';
 
 var rounds = getRoundQuestions();
 

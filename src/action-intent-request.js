@@ -7,11 +7,9 @@ import {
   getRoundQuestions
 } from './question-storage';
 
-import {
-  model
-} from './response-model';
 
-let utilities = require('./utilities'),
+// let model = './response-model',
+  let utilities = require('./utilities'),
     ActionLaunchRequest = require('./action-launch-request'),
     client = require('./api-client');
 
@@ -21,8 +19,8 @@ export function intent(event, context) {
 
   // get intent info
   const intent = event.request.intent,
-    intentName = intent.name,
-    responseModel = new model.ResponseModel("FACE-OFF");
+    intentName = intent.name;
+  let responseModel = new ResponseModel("FACE-OFF");
 
   let answer = intent.slots.Answer.value;
 
