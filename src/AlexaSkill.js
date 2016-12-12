@@ -28,9 +28,9 @@ AlexaSkill.prototype.requestHandlers = {
         this.eventHandlers.onIntent.call(this, event.request, event.session, response);
     },
 
-    SessionEndedRequest: function (event, context) {
+    SessionEndedRequest: function (event, context, callback) {
         this.eventHandlers.onSessionEnded(event.request, event.session);
-        context.succeed();
+        callback(null);
     }
 };
 
@@ -81,7 +81,7 @@ AlexaSkill.prototype.eventHandlers = {
  */
 AlexaSkill.prototype.intentHandlers = {};
 
-AlexaSkill.prototype.execute = function (event, context) {
+AlexaSkill.prototype.execute = function (event, context, callback) {
     try {
         console.log("session applicationId: " + event.session.application.applicationId);
 
@@ -102,16 +102,17 @@ AlexaSkill.prototype.execute = function (event, context) {
 
         // Route the request to the proper handler which may have been overriden.
         var requestHandler = this.requestHandlers[event.request.type];
-        requestHandler.call(this, event, context, new Response(context, event.session));
+        requestHandler.call(this, event, context, new Response(context, event.session, callback));
     } catch (e) {
         console.log("Unexpected exception " + e);
-        context.fail(e);
+        callback(e);
     }
 };
 
-var Response = function (context, session) {
+var Response = function (context, session, callback) {
     this._context = context;
     this._session = session;
+    this._callback = callback;
 };
 
 function createSpeechObject(optionsParam) {
@@ -158,14 +159,14 @@ Response.prototype = (function () {
 
     return {
         tell: function (speechOutput) {
-            this._context.succeed(buildSpeechletResponse({
+            this._callback(null, buildSpeechletResponse({
                 session: this._session,
                 output: speechOutput,
                 shouldEndSession: true
             }));
         },
         tellWithCard: function (speechOutput, cardTitle, cardContent) {
-            this._context.succeed(buildSpeechletResponse({
+            this._callback(null, buildSpeechletResponse({
                 session: this._session,
                 output: speechOutput,
                 cardTitle: cardTitle,
@@ -174,7 +175,7 @@ Response.prototype = (function () {
             }));
         },
         ask: function (speechOutput, repromptSpeech) {
-            this._context.succeed(buildSpeechletResponse({
+            this._callback(null, buildSpeechletResponse({
                 session: this._session,
                 output: speechOutput,
                 reprompt: repromptSpeech,
@@ -182,7 +183,7 @@ Response.prototype = (function () {
             }));
         },
         askWithCard: function (speechOutput, repromptSpeech, cardTitle, cardContent) {
-            this._context.succeed(buildSpeechletResponse({
+            this._callback(null, buildSpeechletResponse({
                 session: this._session,
                 output: speechOutput,
                 reprompt: repromptSpeech,

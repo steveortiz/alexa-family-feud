@@ -72,8 +72,9 @@ HelloWorld.prototype.intentHandlers = {
 };
 
 // Create the handler that responds to the Alexa Request.
-exports.handler = function (event, context) {
+exports.handler = function (event, context, callback) {
+    console.log('event=' + JSON.stringify(event));
     // Create an instance of the HelloWorld skill.
     var helloWorld = new HelloWorld();
-    helloWorld.execute(event, context);
+    helloWorld.execute(event, context, callback);
 };
