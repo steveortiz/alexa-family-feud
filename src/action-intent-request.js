@@ -5,10 +5,13 @@ import {
 
 import {
   getRoundQuestions
-} from './questionStorage';
+} from './question-storage';
 
-let model = require('./response-model'),
-    utilities = require('./utilities'),
+import {
+  model
+} from './response-model';
+
+let utilities = require('./utilities'),
     ActionLaunchRequest = require('./action-launch-request'),
     client = require('./api-client');
 
