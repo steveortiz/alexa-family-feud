@@ -1,7 +1,13 @@
 {
   "intents": [
     {
-      "intent": "HelloWorldIntent"
+      "intent": "GenericIntent",
+      "slots": [
+        {
+          "name": "spokenText",
+          "type": "LITERAL"
+        }
+      ]
     },
     {
       "intent": "AMAZON.HelpIntent"
