@@ -8,6 +8,7 @@
  *  Alexa: "Hello World!"
  */
 
+import _ from 'lodash';
 import AlexaSkill from './alexa-skill';
 
 // TODO: setup bunyan
@@ -47,8 +48,9 @@ exports.handler = (event, context, callback) => {
 
   helloWorld.registerIntentHandlers({
       // register custom intent handlers
-    HelloWorldIntent(intent, session, response) {
-      response.tell('Hello World!');
+    GenericIntent(request, session, response) {
+      const youSaid = _.get(request, 'intent.slots.spokenText.value');
+      response.tell(`You said ${youSaid}`);
     },
     'AMAZON.HelpIntent': (intent, session, response) => {
       response.ask('You can say hello to me!', 'You can say hello to me!');
