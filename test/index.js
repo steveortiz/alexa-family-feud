@@ -1,18 +1,32 @@
-require('./setup');
-const handler = require('../src').handler;
-const context = require('./mocks/context');
-const newLaunchRequest = require('./mocks/event').newLaunchRequest;
+import './setup';
+import { handler } from '../src';
+import context from './mocks/context';
+import { newLaunchRequest, newIntentRequest, newSessionEndRequest } from './mocks/event';
 
-describe('launch', () => {
-  it('launch request new session', (done) => {
-    const event = newLaunchRequest();
-    debugger;
-    handler(event, context, (err, result) => {
-      should.equal(err, null);
-      // result.response.outputSpeech.text.should.equal('Hello World!');
+// utility function to reduce boilerplate
+const testRequest = (request, done, verifyResult) => {
+  handler(request, context, (err, result) => {
+    if (!err) {
+      verifyResult(result);
+    }
+    done(err);
+  });
+};
+
+describe('hello world', () => {
+  it('should reply to LaunchRequest', (done) => {
+    testRequest(newLaunchRequest(), done, (result) => {
       result.response.outputSpeech.text.should.equal('Welcome to the Alexa Skills Kit, you can say hello');
-      // result.response.sessionAttributes.should.deep.equals({});
-      done();
+    });
+  });
+  it('should reply to IntentRequest - HelloWorldIntent', (done) => {
+    testRequest(newIntentRequest('HelloWorldIntent'), done, (result) => {
+      result.response.outputSpeech.text.should.equal('Hello World!');
+    });
+  });
+  it('should reply to SessionEndRequest', (done) => {
+    testRequest(newSessionEndRequest(), done, (result) => {
+      should.equal(result, undefined);
     });
   });
 });

@@ -1,7 +1,7 @@
 // Lambda docs describing the handler:
 // http://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-handler.html
 
-module.exports = {
+export default {
   callbackWaitsForEmptyEventLoop: true,
   logGroupName: '/aws/lambda/this-function-name',
   logStreamName: 'YYYY/MM/DD/[$LATEST]some-stream-name',
