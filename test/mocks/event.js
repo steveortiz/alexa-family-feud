@@ -48,4 +48,15 @@ const newSessionEndRequest = (reason, error, sessionAttributes) => {
   return result;
 };
 
-export { newLaunchRequest, newIntentRequest, newSessionEndRequest };
+// app-specific request
+const newGenericRequest = (value, state) => {
+  const slots = {
+    spokenText: {
+      name: 'spokenText',
+      value,
+    },
+  };
+  return newIntentRequest('GenericIntent', slots, state);
+};
+
+export { newLaunchRequest, newIntentRequest, newSessionEndRequest, newGenericRequest };

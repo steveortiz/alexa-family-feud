@@ -1,3 +1,3 @@
 import './setup';
-import './integration';
 import './welcome-spec';
+import './welcome-integration';
