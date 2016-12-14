@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/steveortiz/alexa-family-feud.svg?branch=master)](https://travis-ci.org/steveortiz/alexa-family-feud)
+
 # Family Feud Skill for Alexa
 
 ## Setup
