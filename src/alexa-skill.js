@@ -39,7 +39,7 @@ class Response {
   }
   toJSON() {
     const { sessionAttributes, outputSpeech, reprompt, shouldEndSession } = this;
-    return {
+    return _({
       version: '1.0',
       sessionAttributes,
       response: {
@@ -47,7 +47,7 @@ class Response {
         reprompt,
         shouldEndSession,
       },
-    };
+    }).omit(_.isNull).value();
   }
 }
 
