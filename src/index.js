@@ -10,6 +10,7 @@
 
 import _ from 'lodash';
 import AlexaSkill from './alexa-skill';
+import GameController from './game-controller';
 
 // TODO: setup bunyan
 // import bunyan from 'bunyan';
@@ -20,42 +21,24 @@ const APP_ID = null; // set equal to "amzn1.echo-sdk-ams.app.[your-unique-value-
 
 // Create the handler that responds to the Alexa Request.
 exports.handler = (event, context, callback) => {
-  const helloWorld = new AlexaSkill(event, context, APP_ID);
+  const skill = new AlexaSkill(event, context, APP_ID);
+  const gameController = new GameController();
 
-  helloWorld.on('SessionStarted', (request, session) => {
-    // log.info(`SessionStarted - requestId: ${request.requestId}, sessionId: ${session.sessionId}`);
-    // any initialization logic goes here
+  const handler = (request, session, response) => {
+    const answer = _.get(request, 'intent.slots.spokenText.value');
+    const state = session.attributes;
+    if (state) {
+      gameController.setState(state);
+    }
+    const responseText = gameController.processAnswer(answer);
+    response.setSessionAttributes(gameController.getState());
+    response.ask(responseText);
+  };
+
+  skill.registerLaunchHandler(handler);
+  skill.registerIntentHandlers({
+    GenericIntent: handler,
   });
 
-  helloWorld.on('LaunchRequest', (request, session) => {
-    // log.info(`LaunchRequest - requestId: ${request.requestId}, sessionId: ${session.sessionId}`);
-  });
-
-  helloWorld.on('IntentRequest', (request, session) => {
-    // log.info(`IntentRequest - requestId: ${request.requestId}, sessionId: ${session.sessionId}, type: ${request.type}`);
-  });
-
-  helloWorld.on('SessionEndedRequest', (request, session) => {
-    // log.info(`SessionEndedRequest - requestId: ${request.requestId}, sessionId: ${session.sessionId}`);
-    // any cleanup logic goes here
-  });
-
-  helloWorld.registerLaunchHandler((request, session, response) => {
-    const speechOutput = 'Welcome to the Alexa Skills Kit, you can say hello';
-    const repromptText = 'You can say hello';
-    response.ask(speechOutput, repromptText);
-  });
-
-  helloWorld.registerIntentHandlers({
-      // register custom intent handlers
-    GenericIntent(request, session, response) {
-      const youSaid = _.get(request, 'intent.slots.spokenText.value');
-      response.tell(`You said ${youSaid}`);
-    },
-    'AMAZON.HelpIntent': (intent, session, response) => {
-      response.ask('You can say hello to me!', 'You can say hello to me!');
-    },
-  });
-
-  helloWorld.execute(callback);
+  skill.execute(callback);
 };
