@@ -1,4 +1,4 @@
 export default {
-  getResponse: () => 'Placeholder',
+  getResponse: () => 'rules',
   processAnswer: state => state,
 };

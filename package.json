@@ -7,10 +7,11 @@
   "scripts": {
     "start": "gulp",
     "clean": "gulp clean",
-    "lint": "eslint src",
-    "test": "mocha test/index.js --compilers js:babel-core/register",
+    "lint": "eslint src test",
+    "mocha": "mocha test/index.js --compilers js:babel-core/register",
     "watch": "mocha test/index.js --compilers js:babel-core/register --watch",
-    "debug": "mocha debug test/index.js --compilers js:babel-core/register --watch"
+    "debug": "mocha debug test/index.js --compilers js:babel-core/register --watch",
+    "test": "npm run lint && npm run mocha"
   },
   "repository": {
     "type": "git",

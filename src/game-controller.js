@@ -17,9 +17,7 @@ const controllerMap = {
 
 export default class GameController {
   constructor() {
-    this.state = {
-      controller: 'welcome',
-    };
+    this.state = {};
   }
   getState() {
     return this.state;
