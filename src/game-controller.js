@@ -32,7 +32,9 @@ export default class GameController {
     return controllerMap[controllerName];
   }
   processAnswer(answer) {
+    this.state.flash = null;
     this.state = this.getController().processAnswer(this.state, answer);
-    return this.getController().getResponse(this.state);
+    const response = this.getController().getResponse(this.state);
+    return this.state.flash ? `${this.state.flash} ${response}` : response;
   }
 }
