@@ -7,15 +7,15 @@ describe('welcome-spec', () => {
   });
   it('goes to face-off if answer is yes', () => {
     const newState = welcome.processAnswer({}, 'yes');
-    newState.controller.should.equal('faceOff');
+    newState.controller.should.equal('coinFlip');
   });
   it('goes to face-off if answer is play', () => {
     const newState = welcome.processAnswer({}, 'play');
-    newState.controller.should.equal('faceOff');
+    newState.controller.should.equal('coinFlip');
   });
   it('goes to face-off if answer contains play', () => {
     const newState = welcome.processAnswer({}, 'let\'s play');
-    newState.controller.should.equal('faceOff');
+    newState.controller.should.equal('coinFlip');
   });
   it('goes to rules if answer is no', () => {
     const newState = welcome.processAnswer({}, 'no');
