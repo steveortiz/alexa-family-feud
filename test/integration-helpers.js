@@ -42,4 +42,8 @@ const performTest = (request, done, verifyResult) => {
   });
 };
 
-export { applyRequest, applyRequests, performTest };
+export {
+  applyRequest,
+  applyRequests,
+  performTest,
+};

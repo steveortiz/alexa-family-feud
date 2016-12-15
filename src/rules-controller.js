@@ -30,7 +30,7 @@ export default {
     if (!_.isString(answer)) {
       result.hasHeardRules = false;
     } else if (answerIncludes(answer, ['yes', 'play'])) {
-      result.controller = 'faceOff';
+      result.controller = 'coinFlip';
     } else if (answerIncludes(answer, ['no', 'rules'])) {
       result.hasHeardRules = false;
     } else {

@@ -1,15 +1,17 @@
 import _ from 'lodash';
 import welcome from './welcome-controller';
-import faceOff from './face-off-controller';
 import rules from './rules-controller';
+import coinFlip from './coin-flip-controller';
+import faceOff from './face-off-controller';
 import familyRound from './family-round-controller';
 import steal from './steal-controller';
 import gameOver from './game-over-controller';
 
 const controllerMap = {
   welcome,
-  faceOff,
   rules,
+  coinFlip,
+  faceOff,
   familyRound,
   steal,
   gameOver,
@@ -30,7 +32,9 @@ export default class GameController {
     return controllerMap[controllerName];
   }
   processAnswer(answer) {
+    this.state.flash = null;
     this.state = this.getController().processAnswer(this.state, answer);
-    return this.getController().getResponse(this.state);
+    const response = this.getController().getResponse(this.state);
+    return this.state.flash ? `${this.state.flash} ${response}` : response;
   }
 }

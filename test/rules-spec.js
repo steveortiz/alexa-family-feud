@@ -7,11 +7,11 @@ describe('rules-spec', () => {
   });
   it('goes to face-off if answer is yes', () => {
     const newState = rules.processAnswer({}, 'yes');
-    newState.controller.should.equal('faceOff');
+    newState.controller.should.equal('coinFlip');
   });
   it('goes to face-off if answer is play', () => {
     const newState = rules.processAnswer({}, 'play');
-    newState.controller.should.equal('faceOff');
+    newState.controller.should.equal('coinFlip');
   });
   it('repeats the rules if answer is no', () => {
     const newState = rules.processAnswer({ controller: 'rules', hasHeardRules: true }, 'no');
