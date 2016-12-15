@@ -2,6 +2,7 @@ import './setup';
 import { applyRequest, performTest } from './integration-helpers';
 import { newLaunchRequest, newGenericRequest } from './mocks/event';
 import { WELCOME_MESSAGE, REPEAT_MESSAGE } from '../src/welcome-controller';
+import { RULES_MESSAGE } from '../src/rules-controller';
 
 describe('welcome-integration: LaunchRequest', () => {
   it('should reply to LaunchRequest', (done) => {
@@ -24,7 +25,7 @@ describe('welcome-integration: Response to Welcome', () => {
     const request = newGenericRequest('rules', welcomedState);
     performTest(request, done, (result) => {
       result.sessionAttributes.controller.should.equal('rules');
-      result.response.outputSpeech.text.should.equal('rules'); // TODO: this will change
+      result.response.outputSpeech.text.should.equal(RULES_MESSAGE);
     });
   });
   it('goes to face-off if answer is play', (done) => {
