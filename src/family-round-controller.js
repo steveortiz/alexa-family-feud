@@ -42,7 +42,7 @@ export default {
     result.remainingAnswers = numOfAnswers(question) - result.correctlyAnswered.length;
     if (result.remainingAnswers === 0) {
       result.controller = 'faceOff';
-      result.flash = 'Congratulations! You cleared the board. Time to begin the next round. The starting team for the face-off alternates, so'; // TODO: and won xx points
+      result.flash = 'Congratulations! You cleared the board. Time to begin the next round. The starting team for the face-off is the team that didn\'t win this face-off, so'; // TODO: and won xx points
     } else if (result.numStrikes === 3) {
       result.controller = 'steal';
       result.flash = 'Sorry. Your team has three strikes.';
