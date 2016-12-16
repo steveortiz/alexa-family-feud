@@ -97,11 +97,11 @@ export default class AlexaSkill extends EventEmitter {
       }
 
       const requestType = this.request.type;
-      const validRequestTypes = ['LaunchRequest', 'IntentRequest', 'SessionEndRequest'];
+      const validRequestTypes = ['LaunchRequest', 'IntentRequest', 'SessionEndedRequest'];
       if (_.includes(validRequestTypes, requestType)) {
         this.emit(requestType, _.cloneDeep(this.request), _.cloneDeep(this.session));
       } else {
-        this.error('Invalid request type', `Request type was ${requestType}`);
+        this.error(`Invalid request type: ${requestType}`, `Request type was ${requestType}`);
       }
 
       if (requestType === 'LaunchRequest') {
@@ -111,11 +111,11 @@ export default class AlexaSkill extends EventEmitter {
         const intentName = _.get(this.request, 'intent.name');
         const intentHandler = this.intentHandlers[intentName];
         if (!intentHandler) {
-          this.error('Undefined intent', `Intent name was ${intentName}`);
+          this.error(`Undefined intent: ${intentName}`, `Intent name was ${intentName}`);
         }
         intentHandler(_.cloneDeep(this.request), _.cloneDeep(this.session), this.response);
         callback(null, this.response.toJSON());
-      } else if (requestType === 'SessionEndRequest') {
+      } else if (requestType === 'SessionEndedRequest') {
         callback();
       }
     } catch (error) {

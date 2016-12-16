@@ -41,8 +41,8 @@ const newIntentRequest = (intentName, slots, sessionAttributes) => {
   return result;
 };
 
-const newSessionEndRequest = (reason, error, sessionAttributes) => {
-  const result = newRequest('SessionEndRequest', sessionAttributes);
+const newSessionEndedRequest = (reason, error, sessionAttributes) => {
+  const result = newRequest('SessionEndedRequest', sessionAttributes);
   result.request.reason = reason;
   result.request.error = error;
   return result;
@@ -59,4 +59,4 @@ const newGenericRequest = (value, state) => {
   return newIntentRequest('GenericIntent', slots, state);
 };
 
-export { newLaunchRequest, newIntentRequest, newSessionEndRequest, newGenericRequest };
+export { newLaunchRequest, newIntentRequest, newSessionEndedRequest, newGenericRequest };
