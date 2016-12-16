@@ -8,9 +8,6 @@
           "type": "LITERAL"
         }
       ]
-    },
-    {
-      "intent": "AMAZON.HelpIntent"
     }
   ]
 }
