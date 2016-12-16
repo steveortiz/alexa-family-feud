@@ -46,5 +46,67 @@
       "answer": "hospital bed",
       "points": 7
     }
+  ],
+  "Name a bad sport for someone who is afraid of the water": [
+    {
+      "answer": "swimming",
+      "points": 33
+    },
+    {
+      "answer": "water polo",
+      "points": 21
+    },
+    {
+      "answer": "water skiing",
+      "points": 17
+    },
+    {
+      "answer": "diving",
+      "points": 11
+    },
+    {
+      "answer": "scuba",
+      "points": 6
+    },
+    {
+      "answer": "surfing",
+      "points": 5
+    }
+  ],
+  "Name a beverage that is served at kids birthday party" : [
+    {
+      "answer": "cool aid",
+      "points": 36
+    },
+    {
+      "answer": "punch",
+      "points": 34
+    },
+    {
+      "answer": "soda",
+      "points": 16
+    },
+    {
+      "answer": "lemonaid",
+      "points": 10
+    },
+    {
+      "answer": "milk",
+      "points": 2
+    }
+  ],
+  "Name a famous pig" : [
+    {
+      "answer": "babe",
+      "points": 44
+    },
+    {
+      "answer": "porky",
+      "points": 43
+    },
+    {
+      "answer": "miss piggy",
+      "points": 19
+    }
   ]
 }
