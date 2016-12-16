@@ -1,15 +1,12 @@
 import _ from 'lodash';
 
-import { getRandomQuestion, getAnswers } from './question-bank';
+import { getRandomQuestion, findAnswer, numOfAnswers, mostPoints } from './question-bank';
 
-const pointsForAnswer = (answer, acceptedAnswers) => {
-  const index = _.findIndex(acceptedAnswers, { answer });
-  return acceptedAnswers[index].points;
-};
-
-const currentTeamName = state => (_.get(state, 'currentTeam', 0) === 0 ? 'team one' : 'team two');
-const previousTeamName = state => (_.get(state, 'currentTeam', 0) === 0 ? 'team two' : 'team one');
-const previousTeam = state => (_.get(state, 'currentTeam', 0) === 0 ? 1 : 0);
+const currentTeamIndex = state => _.get(state, 'currentTeam', 0);
+const isCurrentTeamOne = state => currentTeamIndex(state) === 0;
+const currentTeamName = state => (isCurrentTeamOne(state) ? 'team one' : 'team two');
+const otherTeamIndex = state => (isCurrentTeamOne(state) ? 1 : 0);
+const otherTeamName = state => (isCurrentTeamOne(state) ? 'team two' : 'team one');
 
 export default {
   init: (state = {}) => {
@@ -17,69 +14,68 @@ export default {
     result.question = getRandomQuestion();
     result.correctlyAnswered = [];
     result.hasAnswered = false;
+    // alternate which team starts the face off
+    result.currentTeam = _.isNumber(state.currentTeam) ? otherTeamIndex(state) : 0;
     return result;
   },
   getResponse: (state = {}) => {
-    const teamIndex = _.get(state, 'currentTeam', 0);
-    const team = teamIndex === 0 ? 'team one' : 'team two';
+    const team = currentTeamName(state);
+    const question = state.question;
     if (!state.hasAnswered) {
-      return `${team}, ${state.question}`;
-    } else if (state.wasLastAnswerRight) {
-      const acceptedAnswers = getAnswers(state.question);
-      const currentTeamPoints = pointsForAnswer(state.lastAnswer, acceptedAnswers);
-      return `Yay. ${state.lastAnswer} is worth ${currentTeamPoints} points. There are ${state.remainingAnswers} answers remaining.`;
+      return `${team}, ${question}`;
     }
-    return `Boo. ${state.lastAnswer} is incorrect. ${team}, ${state.question}`;
+    const answer = state.lastAnswer;
+    const foundAnswer = findAnswer(question, answer);
+    if (foundAnswer) {
+      return `Yay. ${foundAnswer.answer} is worth ${foundAnswer.points} points. There are ${state.remainingAnswers} answers remaining.`;
+    }
+    return `Boo. ${answer} is incorrect. ${team}, ${question}`;
   },
   processAnswer: (state = {}, answer) => {
     const result = _.cloneDeep(state);
-    const acceptedAnswers = getAnswers(state.question);
-    const wasLastAnswerRight = result.wasLastAnswerRight =
-      _.includes(acceptedAnswers.map(a => a.answer), answer);
+    const question = state.question;
+    const foundAnswer = findAnswer(question, answer);
     result.hasAnswered = true;
     result.lastAnswer = answer;
     const faceOffAttempts = result.faceOffAttempts = _.get(state, 'faceOffAttempts', 0) + 1;
-    if (wasLastAnswerRight) {
-      result.correctlyAnswered.push(answer);
+    if (foundAnswer) {
+      result.correctlyAnswered.push(foundAnswer.answer);
       if (faceOffAttempts === 1) {
         // check if it's the highest possible answer
-        const pointAward = pointsForAnswer(answer, acceptedAnswers);
-        const pointsArray = _.map(acceptedAnswers, 'points');
-        if (pointAward === _.max(pointsArray)) {
+        if (foundAnswer.points === mostPoints(question)) {
+          result.faceOffWinner = currentTeamIndex(state);
           result.controller = 'familyRound';
-          result.flash = `Yay. ${answer} is worth ${pointAward} points. That is the top answer.`;
+          result.flash = `Yay. ${foundAnswer.answer} is worth ${foundAnswer.points} points. That is the top answer.`;
         }
       } else if (faceOffAttempts === 2) {
         if (result.correctlyAnswered.length === 1) {
           // 2nd team wins by default because they had the only answer
-          const currentTeamPoints = pointsForAnswer(answer, acceptedAnswers);
-          result.flash = `Yay. ${answer} is worth ${currentTeamPoints} points. ${currentTeamName(state)} wins the face off.`;
-          result.faceOffWinner = state.currentTeam;
+          result.flash = `Yay. ${foundAnswer.answer} is worth ${foundAnswer.points} points. ${currentTeamName(state)} wins the face off.`;
+          result.faceOffWinner = currentTeamIndex(state);
           result.controller = 'familyRound';
         } else {
           // both teams answered. compare to see who has the higher score
-          const currentTeamPoints = pointsForAnswer(answer, acceptedAnswers);
-          const otherTeamPoints = pointsForAnswer(result.correctlyAnswered[0], acceptedAnswers);
+          const otherTeamPoints = findAnswer(question, state.correctlyAnswered[0]).points;
           // first team to answer (other team) wins in a tie
-          const otherTeamWins = otherTeamPoints >= currentTeamPoints;
-          const winningTeamName = otherTeamWins ? previousTeamName(state) : currentTeamName(state);
-          result.faceOffWinner = otherTeamWins ? previousTeam(state) : state.currentTeam;
+          const otherTeamWins = otherTeamPoints >= foundAnswer.points;
+          const winningTeamName = otherTeamWins ? otherTeamName(state) : currentTeamName(state);
+          result.faceOffWinner = otherTeamWins ? otherTeamIndex(state) : currentTeamIndex(state);
           result.controller = 'familyRound';
-          result.flash = `Yay. ${answer} is worth ${currentTeamPoints} points. ${otherTeamWins ? 'However, ' : ''}${winningTeamName} wins the face off.`;
+          result.flash = `Yay. ${foundAnswer.answer} is worth ${foundAnswer.points} points. ${otherTeamWins ? 'However, ' : ''}${winningTeamName} wins the face off.`;
         }
       } else {
         // first to get an answer win
-        const currentTeamPoints = pointsForAnswer(answer, acceptedAnswers);
+        const currentTeamPoints = foundAnswer.points;
         result.faceOffWinner = state.currentTeam;
         result.controller = 'familyRound';
         result.flash = `Yay. ${answer} is worth ${currentTeamPoints} points. ${currentTeamName(state)} wins the face off.`;
       }
     } else if (result.correctlyAnswered.length === 1) {
-      result.flash = `Boo. ${answer} is incorrect. ${previousTeamName(state)} wins the face off.`;
+      result.flash = `Boo. ${answer} is incorrect. ${otherTeamName(state)} wins the face off.`;
       result.faceOffWinner = 0;
       result.controller = 'familyRound';
     }
-    result.remainingAnswers = acceptedAnswers.length - result.correctlyAnswered.length;
+    result.remainingAnswers = numOfAnswers(question) - result.correctlyAnswered.length;
     result.currentTeam = _.get(state, 'currentTeam', 0) === 0 ? 1 : 0; // switch teams
     return result;
   },

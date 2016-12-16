@@ -8,9 +8,9 @@
     "start": "gulp",
     "clean": "gulp clean",
     "lint": "eslint src test",
-    "mocha": "mocha test/index.js --compilers js:babel-core/register",
-    "watch": "mocha test/index.js --compilers js:babel-core/register --watch",
-    "debug": "mocha debug test/index.js --compilers js:babel-core/register --watch",
+    "mocha": "NODE_ENV=${NODE_ENV:=test} mocha test/index.js --compilers js:babel-core/register",
+    "watch": "NODE_ENV=${NODE_ENV:=test} mocha test/index.js --compilers js:babel-core/register --watch",
+    "debug": "NODE_ENV=${NODE_ENV:=test} mocha debug test/index.js --compilers js:babel-core/register --watch",
     "test": "npm run lint && npm run mocha"
   },
   "repository": {
@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.2",
+    "pluralize": "^3.1.0",
     "winston": "^2.3.0"
   }
 }
