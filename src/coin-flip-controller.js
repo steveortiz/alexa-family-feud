@@ -13,7 +13,7 @@ export default {
     const result = _.clone(state);
     if (!_.isString(answer)) {
       result.hasHeardCoinFlip = false;
-    } else if (_.includes(['heads', 'tails'], answer)) {
+    } else if (_.includes(['heads', 'tails', 'tales'], answer)) {
       const correct = randomBoolean();
       if (correct) {
         result.flash = `${answer} is right. You may decide whether you want to be team one and start the face-off or be team two.`;
