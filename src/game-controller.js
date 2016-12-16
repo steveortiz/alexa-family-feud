@@ -33,8 +33,13 @@ export default class GameController {
   }
   processAnswer(answer) {
     this.state.flash = null;
-    this.state = this.getController().processAnswer(this.state, answer);
-    const response = this.getController().getResponse(this.state);
+    const processingController = this.getController();
+    this.state = processingController.processAnswer(this.state, answer);
+    const respondingController = this.getController();
+    if (respondingController !== processingController && respondingController.init) {
+      this.state = respondingController.init(this.state);
+    }
+    const response = respondingController.getResponse(this.state);
     return this.state.flash ? `${this.state.flash} ${response}` : response;
   }
 }

@@ -1,0 +1,50 @@
+{
+  "Name a word that most people yell at their dogs": [
+    {
+      "answer": "no",
+      "points": 27
+    },
+    {
+      "answer": "sit",
+      "points": 23
+    },
+    {
+      "answer": "stop",
+      "points": 14
+    },
+    {
+      "answer": "down",
+      "points": 7
+    },
+    {
+      "answer": "fetch",
+      "points": 6
+    },
+    {
+      "answer": "bad",
+      "points": 5
+    }
+  ],
+  "Name something a hospital uses to transport patients": [
+    {
+      "answer": "ambulance",
+      "points": 31
+    },
+    {
+      "answer": "wheelchair",
+      "points": 23
+    },
+    {
+      "answer": "gurney",
+      "points": 22
+    },
+    {
+      "answer": "helicopter",
+      "points": 16
+    },
+    {
+      "answer": "hospital bed",
+      "points": 7
+    }
+  ]
+}
