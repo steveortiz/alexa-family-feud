@@ -5,3 +5,4 @@ import './welcome-integration';
 import './rules-spec';
 import './coin-flip-spec';
 import './coin-flip-integration';
+import './face-off-spec';
