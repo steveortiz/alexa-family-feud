@@ -14,6 +14,8 @@ export default {
     result.question = getRandomQuestion();
     result.correctlyAnswered = [];
     result.hasAnswered = false;
+    // alternate which team starts the face off
+    result.currentTeam = _.isNumber(state.currentTeam) ? otherTeamIndex(state) : 0;
     return result;
   },
   getResponse: (state = {}) => {

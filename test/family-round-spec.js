@@ -63,15 +63,7 @@ describe('family-round-spec', () => {
       state = familyRound.processAnswer(state, answer.answer);
     });
     state.controller.should.equal('faceOff');
-    state.flash.should.equal('Congratulations! You cleared the board.'); // TODO: and won xx points
-  });
-  it('should tell the family they won and start a new question if they cleared the board', () => {
-    let state = startingState();
-    ANSWERS.forEach((answer) => {
-      state = familyRound.processAnswer(state, answer.answer);
-    });
-    state.controller.should.equal('faceOff');
-    state.flash.should.equal('Congratulations! You cleared the board.'); // TODO: and won xx points
+    state.flash.should.equal('Congratulations! You cleared the board. Time to begin the next round. The starting team for the face-off alternates, so'); // TODO: and won xx points
   });
   it('should tell the family they struck out if they give 3 wrong answers', () => {
     let state = startingState();
