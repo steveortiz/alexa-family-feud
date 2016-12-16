@@ -11,10 +11,7 @@
 import _ from 'lodash';
 import AlexaSkill from './alexa-skill';
 import GameController from './game-controller';
-
-// TODO: setup bunyan
-// import bunyan from 'bunyan';
-// const log = bunyan.createLogger({name: "hello"});
+import log from './log';
 
 // App ID for the skill
 const APP_ID = null; // set equal to "amzn1.echo-sdk-ams.app.[your-unique-value-here]";
@@ -26,13 +23,16 @@ exports.handler = (event, context, callback) => {
 
   const handler = (request, session, response) => {
     const answer = _.get(request, 'intent.slots.spokenText.value');
-    const state = session.attributes;
+    let state = session.attributes;
+    log.info(`User: ${answer || ''}`, { state });
     if (state) {
       gameController.setState(state);
     }
     const responseText = gameController.processAnswer(answer);
-    response.setSessionAttributes(gameController.getState());
+    state = gameController.getState();
+    response.setSessionAttributes(state);
     response.ask(responseText);
+    log.info(`Alexa: ${responseText}`, { state });
   };
 
   skill.registerLaunchHandler(handler);
