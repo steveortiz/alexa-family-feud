@@ -26,7 +26,7 @@ describe('coin-flip-spec', () => {
   });
   it('responds correctly when heads is wrong', () => {
     setupWrongAnswer();
-    const state = coinFlip.processAnswer({}, 'heads');
+    const state = coinFlip.processAnswer({}, 'tails');
     state.flash.should.equal('Sorry. It was tails. The other team decides whether they want to be team one and start the face-off or be team two.');
   });
   it('responds correctly when tails is right', () => {
